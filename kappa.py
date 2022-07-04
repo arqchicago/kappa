@@ -1,4 +1,5 @@
 from data_proc import data_load
+import datetime as dt
 
 if __name__ == '__main__':
 
@@ -10,4 +11,14 @@ if __name__ == '__main__':
     sp500_df_size = sp500.get_size()
     #print(sp500_df)
     #print(sp500_df.columns.tolist())
-    print(sp500_df_size)
+    #print(sp500_df_size)
+    
+    # adding in more variables
+    sp500_df['quarter'] = sp500_df['Date'].dt.quarter
+    sp500_df['ret_90day'] = sp500_df['Close'].pct_change(90)
+    sp500_df['ret_180day'] = sp500_df['Close'].pct_change(180)
+    sp500_df['ret_270day'] = sp500_df['Close'].pct_change(270)
+    sp500_df['ret_1yr'] = sp500_df['Close'].pct_change(365)
+    print(sp500_df)
+    print(sp500_df.columns.tolist())
+    
