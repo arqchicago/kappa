@@ -1,4 +1,5 @@
 from data_proc import data_load
+from technicals import simple_technicals
 import datetime as dt
 
 if __name__ == '__main__':
@@ -19,6 +20,12 @@ if __name__ == '__main__':
     sp500_df['ret_180day'] = sp500_df['Close'].pct_change(180)
     sp500_df['ret_270day'] = sp500_df['Close'].pct_change(270)
     sp500_df['ret_1yr'] = sp500_df['Close'].pct_change(365)
-    print(sp500_df)
-    print(sp500_df.columns.tolist())
     
+    sp500_techs = simple_technicals(sp500_df)
+    sp500_techs.moving_avg(5, 'Close', 'ma_5')
+    sp500_techs.moving_avg(200, 'Close', 'ma_200')
+    sp500_df = sp500_techs.get_df()
+    
+    print(sp500_df.head(250).to_string())
+    print(sp500_df.to_string())
+    print(sp500_df.columns.tolist())
