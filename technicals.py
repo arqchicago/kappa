@@ -19,8 +19,8 @@ class simple_technicals:
         self.df[new_colname] = self.df[colname].rolling(n).std().fillna(method='bfill')
 
     def bol_bands(self, n, m, moving_avg_colname, moving_std_colname, new_colname_lbb, new_colname_ubb):
-        self.df[new_colname_lbb] = self.df[moving_avg_colname].rolling(n).std().fillna(method='bfill') - m * self.df[moving_std_colname].rolling(n).std().fillna(method='bfill')
-        self.df[new_colname_ubb] = self.df[moving_avg_colname].rolling(n).std().fillna(method='bfill') + m * self.df[moving_std_colname].rolling(n).std().fillna(method='bfill')
+        self.df[new_colname_lbb] = self.df[moving_avg_colname] - m * self.df[moving_std_colname]
+        self.df[new_colname_ubb] = self.df[moving_avg_colname] + m * self.df[moving_std_colname]
         
 
 

@@ -48,6 +48,12 @@ if __name__ == '__main__':
     # 10 day moving avg and moving std deviation
     sp500_techs.moving_avg(10, 'Close', 'mavg_10')
     sp500_techs.moving_std(10, 'Close', 'mstd_10')
+    sp500_techs.bol_bands(10, 2, 'mavg_10', 'mstd_10', 'lbb_10', 'ubb_10')
+
+    # 20 day moving avg and moving std deviation
+    sp500_techs.moving_avg(20, 'Close', 'mavg_20')
+    sp500_techs.moving_std(20, 'Close', 'mstd_20')
+    sp500_techs.bol_bands(20, 2, 'mavg_20', 'mstd_20', 'lbb_20', 'ubb_20')
     
     sp500_techs.moving_avg(200, 'Close', 'mavg_200')
     sp500_df = sp500_techs.get_df()
@@ -67,4 +73,11 @@ if __name__ == '__main__':
     line_chart.plot_title = 'SP500'
     line_chart.plot_suptitle = 'Moving Averages'
     line_chart.watermark = 'draft'
-    line_chart.line_chart('line_chart_sp500.png', 'Date', ['Close', 'mavg_200'], watermark_loc='lower_left')
+    line_chart.line_chart('charts//line_chart_sp500.png', 'Date', ['Close', 'mavg_200'], watermark_loc='lower_left')
+
+    mask2 = (sp500_df['Date'] > '2020-01-01') & (sp500_df['Date'] <= '2022-06-25')
+
+    ma_bb_5day = arq_viz(sp500_df.loc[mask2])    
+    ma_bb_5day.plot_suptitle = '5 day MABB'
+    ma_bb_5day.watermark = 'draft'
+    ma_bb_5day.line_chart('charts//5day_bb_sp500.png', 'Date', ['Close', 'lbb_20', 'ubb_20', 'mavg_200'], watermark_loc='lower_left')
