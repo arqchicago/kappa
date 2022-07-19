@@ -25,6 +25,7 @@ class data_load:
     def get_file(self):
         return self.file
 
+
 if __name__ == '__main__':
 
     # generate random data clusters
