@@ -2,6 +2,8 @@ from data_proc import data_load
 from technicals import simple_technicals
 from visualizer import arq_viz    
 import datetime as dt
+import numpy as np
+
 
 if __name__ == '__main__':
 
@@ -75,13 +77,15 @@ if __name__ == '__main__':
     # ----------------------------------------------------------------   
     sp500_df = sp500_techs.get_df()
 
-    sp500_df['mavg20_lbb20'] = sp500_df['mavg_20'] - sp500_df['lbb_20']  # 20 day moving avg - lbb 20
-    sp500_df['mavg20_lbb30'] = sp500_df['mavg_20'] - sp500_df['lbb_30']  # 20 day moving avg - lbb 30
-    sp500_df['mavg30_lbb30'] = sp500_df['mavg_30'] - sp500_df['lbb_30']  # 30 day moving avg - lbb 30
-    sp500_df['mavg30_lbb60'] = sp500_df['mavg_30'] - sp500_df['lbb_60']  # 30 day moving avg - lbb 60
-    sp500_df['mavg60_lbb60'] = sp500_df['mavg_60'] - sp500_df['lbb_60']  # 60 day moving avg - lbb 60
-    sp500_df['mavg60_lbb180'] = sp500_df['mavg_60'] - sp500_df['lbb_180']  # 60 day moving avg - lbb 180
-    sp500_df['mavg180_lbb180'] = sp500_df['mavg_180'] - sp500_df['lbb_180']  # 180 day moving avg - lbb 180
+    sp500_df['mavg10_lbb20'] = sp500_df['mavg_10'] - sp500_df['lbb_20']  # 10 day moving avg - lbb 20
+    sp500_df['mavg10_lbb30'] = sp500_df['mavg_10'] - sp500_df['lbb_30']  # 10 day moving avg - lbb 30
+    sp500_df['mavg10_lbb60'] = sp500_df['mavg_10'] - sp500_df['lbb_60']  # 10 day moving avg - lbb 60
+    sp500_df['mavg10_lbb180'] = sp500_df['mavg_10'] - sp500_df['lbb_180']  # 10 day moving avg - lbb 180
+
+    sp500_df['mavg10_ubb20'] = sp500_df['ubb_20'] - sp500_df['mavg_10']  # ubb 20 - 10 day moving avg
+    sp500_df['mavg10_ubb30'] = sp500_df['ubb_30'] - sp500_df['mavg_10']  # ubb 30 - 10 day moving avg
+    sp500_df['mavg10_ubb60'] = sp500_df['ubb_60'] - sp500_df['mavg_10']  # ubb 60 - 10 day moving avg
+    sp500_df['mavg10_ubb180'] = sp500_df['ubb_180'] - sp500_df['mavg_10']  # ubb 180 - 10 day moving avg
     
 
     sp500_df = sp500_techs.get_df()
@@ -112,7 +116,16 @@ if __name__ == '__main__':
 
     
     # save data for model development
-    # ----------------------------------------------------------------   
-    save_vars = ['Date', 'ret_1yr'] + ['mavg20_lbb20', 'mavg20_lbb30', 'mavg30_lbb30', 'mavg30_lbb60', 'mavg60_lbb60']
-    df = sp500_df[save_vars].copy()    
+    # ----------------------------------------------------------------
+    
+    # modeling 1 year return classifier and regressor
+    # classifier is if 1 year return > 0.15, then 1 else 0
+    conditions = [(sp500_df['ret_1yr']>0.15), (sp500_df['ret_1yr']<=0.15)]
+    choices = [1,0]
+    sp500_df['ret_1yr_ind'] = np.select(conditions, choices, default=0)
+
+    save_vars = ['Date', 'ret_1yr', 'ret_1yr_ind'] + \
+                ['mavg10_lbb20', 'mavg10_lbb30', 'mavg10_lbb60', 'mavg10_lbb180', 'mavg10_ubb20', 'mavg10_ubb30', 'mavg10_ubb60', 'mavg10_ubb180']
+    df = sp500_df[save_vars].copy()   
+    df = sp500_df[save_vars]    
     df.to_csv('output//sp500_processed.csv', index=False)
