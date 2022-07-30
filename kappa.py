@@ -26,19 +26,19 @@ if __name__ == '__main__':
 
     # 90 day return (%)
     sp500_df['ret_90day'] = sp500_df['Close'].pct_change(90)
-    sp500_df['ret_90day'] = sp500_df['ret_90day'].shift(-90)  #.fillna(method='ffill')
+    sp500_df['ret_90day'] = sp500_df['ret_90day'].shift(-90) #.fillna(method='ffill')
 
     # 180 day return (%)    
     sp500_df['ret_180day'] = sp500_df['Close'].pct_change(180)
-    sp500_df['ret_180day'] = sp500_df['ret_180day'].shift(-180)  #.fillna(method='ffill')
+    sp500_df['ret_180day'] = sp500_df['ret_180day'].shift(-180) #.fillna(method='ffill')
 
     # 1 yr return (%)
     sp500_df['ret_1yr'] = sp500_df['Close'].pct_change(365)
-    sp500_df['ret_1yr'] = sp500_df['ret_1yr'].shift(-365)  #.fillna(method='ffill')
+    sp500_df['ret_1yr'] = sp500_df['ret_1yr'].shift(-365) #.fillna(method='ffill')
 
     # 2 yr return (%)
     sp500_df['ret_2yr'] = sp500_df['Close'].pct_change(730)
-    sp500_df['ret_2yr'] = sp500_df['ret_2yr'].shift(-730)  #.fillna(method='ffill')
+    sp500_df['ret_2yr'] = sp500_df['ret_2yr'].shift(-730) #.fillna(method='ffill')
 
 
     # adding simple technicals
@@ -127,5 +127,7 @@ if __name__ == '__main__':
     save_vars = ['Date', 'ret_1yr', 'ret_1yr_ind'] + \
                 ['mavg10_lbb20', 'mavg10_lbb30', 'mavg10_lbb60', 'mavg10_lbb180', 'mavg10_ubb20', 'mavg10_ubb30', 'mavg10_ubb60', 'mavg10_ubb180']
     df = sp500_df[save_vars].copy()   
-    df = sp500_df[save_vars]    
+    df = sp500_df[save_vars]
+    
+    df = df[~df['ret_1yr'].isnull()].copy()
     df.to_csv('output//sp500_processed.csv', index=False)
